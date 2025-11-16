@@ -17,6 +17,9 @@ Run the Quarkus distribution in development mode for live reloading and debuggin
 mvn -f some_module/pom.xml compile quarkus:dev
 ```
 
+> [!NOTE]
+> The Quarkus build mojo is skipped for regular `mvn package`/`mvn install` executions to avoid failures on modules that only contribute Keycloak providers. When you do need the Quarkus build, flip the new property with `-Dquarkus.build.skip=false` (or add it to your profile) before invoking the desired `quarkus:*` goal.
+
 Works great:)
 https://github.com/keycloak/keycloak/discussions/11841
 
