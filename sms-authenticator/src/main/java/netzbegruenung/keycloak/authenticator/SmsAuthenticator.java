@@ -36,6 +36,9 @@ import org.keycloak.authentication.RequiredActionProvider;
 import org.keycloak.common.util.SecretGenerator;
 import org.keycloak.credential.CredentialModel;
 import org.keycloak.credential.CredentialProvider;
+import org.keycloak.events.Details;
+import org.keycloak.events.Errors;
+import org.keycloak.events.EventType;
 import org.keycloak.models.AuthenticationExecutionModel;
 import org.keycloak.models.AuthenticatorConfigModel;
 import org.keycloak.models.KeycloakSession;
@@ -111,8 +114,8 @@ public class SmsAuthenticator implements Authenticator, CredentialValidator<SmsA
 			return;
 		}
 
-		boolean isValid = enteredCode.equals(code);
-		if (isValid) {
+                boolean isValid = enteredCode.equals(code);
+                if (isValid) {
 			if (Long.parseLong(ttl) < System.currentTimeMillis()) {
 				// expired
 				context.failureChallenge(AuthenticationFlowError.EXPIRED_CODE,
@@ -121,9 +124,16 @@ public class SmsAuthenticator implements Authenticator, CredentialValidator<SmsA
 				// valid
 				context.success();
 			}
-		} else {
-			// invalid
-			AuthenticationExecutionModel execution = context.getExecution();
+                } else {
+                        // invalid
+                        context.getEvent()
+                                .event(EventType.LOGIN_ERROR)
+                                .user(context.getUser())
+                                .detail(Details.USERNAME, context.getUser().getUsername())
+                                .detail("auth_method", "sms")
+                                .detail("error_reason", "invalid_sms_code")
+                                .error(Errors.INVALID_USER_CREDENTIALS);
+                        AuthenticationExecutionModel execution = context.getExecution();
 			if (execution.isRequired()) {
 				context.failureChallenge(AuthenticationFlowError.INVALID_CREDENTIALS,
 					context.form().setAttribute("realm", context.getRealm())

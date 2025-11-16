@@ -17,6 +17,20 @@ Run the Quarkus distribution in development mode for live reloading and debuggin
 mvn -f some_module/pom.xml compile quarkus:dev
 ```
 
+> [!NOTE]
+> The Quarkus build mojo is skipped for regular `mvn package`/`mvn install` executions to avoid failures on modules that only contribute Keycloak providers. When you do need the Quarkus build, flip the property with `-Dquarkus.build.skip=false` (or add it to your Maven profile) before invoking the desired `quarkus:*` goal and the `quarkus-build` profile will automatically wire the `quarkus:build` goal back into the lifecycle.
+
+### Why does `quarkus:build` fail in this repository?
+
+The modules in this repository ship Keycloak provider JARs, not runnable Quarkus applications. When the Quarkus Maven plugin's `build` goal is bound to the default lifecycle it tries to bootstrap a full Quarkus distribution and therefore expects `io.quarkus.maven.QuarkusBootstrapProvider` to be available. Because the provider modules do not depend on Quarkus' bootstrap classes, Maven reports errors like:
+
+```
+Failed to execute goal io.quarkus:quarkus-maven-plugin:3.20.2:build ...
+No implementation for io.quarkus.maven.QuarkusBootstrapProvider was bound
+```
+
+To prevent this unavoidable failure we skip the Quarkus build goal unless you explicitly request it with `-Dquarkus.build.skip=false`. Only flip that property (or activate the `quarkus-build` profile manually) when you are working on a module that truly contains a Quarkus distribution—regular provider development never needs it.
+
 Works great:)
 https://github.com/keycloak/keycloak/discussions/11841
 
