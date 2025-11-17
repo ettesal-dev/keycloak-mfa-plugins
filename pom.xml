@@ -7,7 +7,7 @@
 	<groupId>netzbegruenung</groupId>
 	<artifactId>keycloak-mfa-tools</artifactId>
 	<packaging>pom</packaging>
-	<version>26.3.4</version>
+        <version>26.4.4</version>
 
         <modules>
                 <module>sms-authenticator</module>
@@ -74,11 +74,6 @@
 					<version>${maven.surefire.version}</version>
 				</plugin>
 
-                                <plugin>
-                                        <groupId>io.quarkus</groupId>
-                                        <artifactId>quarkus-maven-plugin</artifactId>
-                                        <version>${quarkus.version}</version>
-                                </plugin>
                         </plugins>
                 </pluginManagement>
         </build>
@@ -97,6 +92,7 @@
                                         <plugin>
                                                 <groupId>io.quarkus</groupId>
                                                 <artifactId>quarkus-maven-plugin</artifactId>
+                                                <version>${quarkus.version}</version>
                                                 <executions>
                                                         <execution>
                                                                 <goals>
