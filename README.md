@@ -11,6 +11,8 @@ The different plugins are documented in the submodules README. If you need suppo
 The code of this project is Apache 2.0 licensed. Parts of the original code are MIT licensed.
 
 ## Development
+[Quarkus Dev Server](mfa-dev-runner/README.md)
+
 Run the Quarkus distribution in development mode for live reloading and debugging similar to: https://github.com/keycloak/keycloak/tree/main/quarkus#contributing
 
 ```shell
@@ -25,7 +27,7 @@ mvn -f some_module/pom.xml compile quarkus:dev
 The modules in this repository ship Keycloak provider JARs, not runnable Quarkus applications. When the Quarkus Maven plugin's `build` goal is bound to the default lifecycle it tries to bootstrap a full Quarkus distribution and therefore expects `io.quarkus.maven.QuarkusBootstrapProvider` to be available. Because the provider modules do not depend on Quarkus' bootstrap classes, Maven reports errors like:
 
 ```
-Failed to execute goal io.quarkus:quarkus-maven-plugin:3.20.2:build ...
+Failed to execute goal io.quarkus:quarkus-maven-plugin:3.27.0:build ...
 No implementation for io.quarkus.maven.QuarkusBootstrapProvider was bound
 ```
 
